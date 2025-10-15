@@ -1,13 +1,21 @@
 package views.mainframe;
 
+import controllers.Controller;
+import models.observer.objectlisteners.ParametersListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class FilePathPanel extends JPanel {
+public class FilePathPanel extends JPanel implements ParametersListener {
+
+    JTextField textField;
 
     public FilePathPanel() {
         initialize();
+
+        // Listen to parameters
+        Controller.getInstance().getParameters().addListener(this);
     }
 
     /**
@@ -15,7 +23,6 @@ public class FilePathPanel extends JPanel {
      */
     private void initialize() {
         JLabel label;
-        JTextField textField;
         JButton chooseFileButton;
 
 
@@ -36,12 +43,14 @@ public class FilePathPanel extends JPanel {
 
         // Event listeners
         ActionListener chooseFileEvent = (_ -> {
-            JFileChooser fc = new JFileChooser();
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            int returnValue = fc.showOpenDialog(this);
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int returnValue = fileChooser.showOpenDialog(this);
 
             if (returnValue == JFileChooser.APPROVE_OPTION) {
-                textField.setText(fc.getSelectedFile().getPath());
+                String path = fileChooser.getSelectedFile().getPath();
+                textField.setText(fileChooser.getSelectedFile().getPath());
+                Controller.getInstance().getParameters().setFilePath(path);
             }
         });
 
@@ -53,5 +62,22 @@ public class FilePathPanel extends JPanel {
         add(label);
         add(textField);
         add(chooseFileButton);
+    }
+
+    @Override
+    public void onFilePathChange(String oldFilePath, String newFilePath) {
+        if (!textField.getText().equals(newFilePath)) {
+            textField.setText(newFilePath);
+        }
+    }
+
+    @Override
+    public void onTimePerImage(int oldTimePerImage, int newTimePerImage) {
+        // Nothing to do
+    }
+
+    @Override
+    public void onChange(Object source) {
+        // Nothing to do
     }
 }

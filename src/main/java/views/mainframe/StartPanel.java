@@ -1,5 +1,8 @@
 package views.mainframe;
 
+import models.commands.CommandInvoker;
+import models.commands.concrete.StartCommand;
+
 import javax.swing.*;
 
 public class StartPanel extends JPanel {
@@ -17,9 +20,9 @@ public class StartPanel extends JPanel {
 
         // Start button
         startButton = new JButton("Start");
-        // TODO : Add action listener
+        startButton.addActionListener(_ -> CommandInvoker.getInstance().executeCommand(new StartCommand()));
 
-        
+
         // Add components
         add(startButton);
     }

@@ -1,6 +1,9 @@
 package views.mainframe;
 
+import controllers.Controller;
 import models.constants.ui.TimePanelConstants;
+import models.objects.Parameters;
+import models.observer.objectlisteners.ParametersListener;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -10,13 +13,19 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.text.NumberFormat;
 
-public class TimePanel extends JPanel {
+public class TimePanel extends JPanel implements ParametersListener {
+
+    JFormattedTextField textField;
+    JSlider timeSlider;
 
     private NumberFormatter formatter;
 
     public TimePanel() {
         initializeFormatter();
         initialize();
+
+        // Listen to parameters
+        Controller.getInstance().getParameters().addListener(this);
     }
 
     /**
@@ -35,8 +44,6 @@ public class TimePanel extends JPanel {
      */
     private void initialize() {
         JLabel label;
-        JFormattedTextField textField;
-        JSlider timeSlider;
 
 
         // Label
@@ -76,7 +83,7 @@ public class TimePanel extends JPanel {
                     timeSlider.addChangeListener(changeSliderListener);
                     timeSlider.setSnapToTicks(true);
                 }
-                // TODO : Change model
+                Controller.getInstance().getParameters().setTimePerImage(textFieldValue);
             }
 
             @Override
@@ -95,5 +102,25 @@ public class TimePanel extends JPanel {
         add(label);
         add(textField);
         add(timeSlider);
+    }
+
+
+    // OBSERVER
+
+    @Override
+    public void onFilePathChange(String oldFilePath, String newFilePath) {
+        // Nothing to do
+    }
+
+    @Override
+    public void onTimePerImage(int oldTimePerImage, int newTimePerImage) {
+        if (timeSlider.getValue() != newTimePerImage) {
+            timeSlider.setValue(newTimePerImage);
+        }
+    }
+
+    @Override
+    public void onChange(Object source) {
+        // Nothing to do
     }
 }
