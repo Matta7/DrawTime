@@ -9,9 +9,13 @@ public class StartCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        Parameters parameters = Controller.getInstance().getParameters();
+        Controller controller = Controller.getInstance();
+        Parameters parameters = controller.getParameters();
 
-        System.out.println(parameters.areValid());
-        // TODO : open new frame or open dialog if invalid
+        if (parameters.isValid()) {
+            controller.openImageFrame();
+        } else {
+            // TODO : open new frame or open dialog if invalid
+        }
     }
 }

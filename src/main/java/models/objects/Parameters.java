@@ -9,6 +9,12 @@ public class Parameters extends AbstractListenable {
 
     private int timePerImage = 5;
 
+    private boolean valid = false;
+
+    public Parameters() {
+        updateValidity();
+    }
+
 
     // GETTERS AND SETTERS
 
@@ -25,6 +31,9 @@ public class Parameters extends AbstractListenable {
             ((ParametersListener) l).onFilePathChange(oldFilePath, filePath);
             l.onChange(this);
         });
+
+        // Update validity
+        updateValidity();
     }
 
     public int getTimePerImage() {
@@ -40,12 +49,31 @@ public class Parameters extends AbstractListenable {
             ((ParametersListener) l).onTimePerImage(oldTimePerImage, timePerImage);
             l.onChange(this);
         });
+
+        // Update validity
+        updateValidity();
     }
 
+    public boolean isValid() {
+        return valid;
+    }
 
     // METHODS
 
-    public boolean areValid() {
-        return filePath != null && !filePath.isEmpty() && timePerImage < 30 && timePerImage > 1;
+    /**
+     * Update parameters validity
+     */
+    private void updateValidity() {
+        boolean newValid = filePath != null && !filePath.isEmpty() && timePerImage < 30 && timePerImage > 1;
+
+        if (newValid != valid) {
+            valid = newValid;
+
+            // Call listeners
+            listeners.forEach(l -> {
+                ((ParametersListener) l).onValidityChange(newValid);
+                l.onChange(this);
+            });
+        }
     }
 }

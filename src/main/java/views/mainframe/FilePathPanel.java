@@ -64,6 +64,9 @@ public class FilePathPanel extends JPanel implements ParametersListener {
         add(chooseFileButton);
     }
 
+    
+    // EVENT HANDLER METHODS
+
     @Override
     public void onFilePathChange(String oldFilePath, String newFilePath) {
         if (!textField.getText().equals(newFilePath)) {
@@ -77,7 +80,12 @@ public class FilePathPanel extends JPanel implements ParametersListener {
     }
 
     @Override
-    public void onChange(Object source) {
+    public void onValidityChange(boolean valid) {
         // Nothing to do
+    }
+
+    @Override
+    public void onChange(Object source) {
+        // Handled in onFilePathChange method
     }
 }

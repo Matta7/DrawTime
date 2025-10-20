@@ -2,7 +2,6 @@ package views.mainframe;
 
 import controllers.Controller;
 import models.constants.ui.TimePanelConstants;
-import models.objects.Parameters;
 import models.observer.objectlisteners.ParametersListener;
 
 import javax.swing.*;
@@ -97,7 +96,6 @@ public class TimePanel extends JPanel implements ParametersListener {
             }
         });
 
-
         // Add components
         add(label);
         add(textField);
@@ -105,7 +103,7 @@ public class TimePanel extends JPanel implements ParametersListener {
     }
 
 
-    // OBSERVER
+    // EVENT HANDLER METHODS
 
     @Override
     public void onFilePathChange(String oldFilePath, String newFilePath) {
@@ -120,7 +118,12 @@ public class TimePanel extends JPanel implements ParametersListener {
     }
 
     @Override
-    public void onChange(Object source) {
+    public void onValidityChange(boolean valid) {
         // Nothing to do
+    }
+
+    @Override
+    public void onChange(Object source) {
+        // Handled in onTimePerImage method
     }
 }

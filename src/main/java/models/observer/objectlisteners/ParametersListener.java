@@ -22,4 +22,11 @@ public interface ParametersListener extends Listener {
      * @param newTimePerImage New time per image
      */
     void onTimePerImage(int oldTimePerImage, int newTimePerImage);
+
+    /**
+     * Called when parameters validity changes
+     *
+     * @param valid current updated validity
+     */
+    void onValidityChange(boolean valid);
 }
