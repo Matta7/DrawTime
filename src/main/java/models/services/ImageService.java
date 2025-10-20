@@ -26,7 +26,7 @@ public class ImageService {
 
     public BufferedImage getCurrentImage() {
         try {
-            return ImageIO.read(new File(""));
+            return ImageIO.read(new File("C:\\Users\\Mat\\Pictures\\cat-laughing-4.png"));
         } catch (IOException e) {
             // Test
         }

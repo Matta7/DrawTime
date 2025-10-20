@@ -17,6 +17,7 @@ public class ImageFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         add(new ImageViewerPanel(Controller.getInstance().getImageService().getCurrentImage()), BorderLayout.CENTER);
+        add(new ControlBarPanel(), BorderLayout.SOUTH);
 
         pack();
         validate();

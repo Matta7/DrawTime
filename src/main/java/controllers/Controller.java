@@ -1,5 +1,6 @@
 package controllers;
 
+import models.objects.CountdownTimer;
 import models.objects.Parameters;
 import models.services.ImageService;
 import views.imageframe.ImageFrame;
@@ -12,20 +13,23 @@ public class Controller {
 
     private static final Controller instance = new Controller();
 
+
     // Model
 
     private Parameters parameters;
 
-    private ImageService imageService;
+    private final CountdownTimer timer;
+
+    private final ImageService imageService;
+
 
     // View
-
-    private MainFrame mainFrame;
 
     private ImageFrame imageFrame;
 
     private Controller() {
         parameters = new Parameters();
+        timer = new CountdownTimer();
         imageService = new ImageService();
     }
 
@@ -50,14 +54,21 @@ public class Controller {
         this.parameters = parameters;
     }
 
+    public CountdownTimer getTimer() {
+        return timer;
+    }
+
     public ImageService getImageService() {
         return imageService;
     }
+
 
     // METHODS
 
     public void openImageFrame() {
         if (imageFrame == null) {
+            timer.setTime(parameters.getTimePerImage() * 60);
+
             imageFrame = new ImageFrame();
             imageFrame.addWindowListener(new WindowAdapter() {
                 @Override
@@ -65,10 +76,12 @@ public class Controller {
                     imageFrame = null;
                 }
             });
+
+            timer.start();
         }
     }
 
     public void run() {
-        mainFrame = new MainFrame();
+        new MainFrame();
     }
 }

@@ -17,7 +17,7 @@ public class ImageViewerPanel extends JPanel {
 
     private Point lastDrag;
 
-    private final double ZOOM_STEP = 0.1;
+    private static final double ZOOM_STEP = 0.1;
 
 
     public ImageViewerPanel(BufferedImage image) {
@@ -35,13 +35,12 @@ public class ImageViewerPanel extends JPanel {
             } else {
                 scale *= (1 - ZOOM_STEP);
             }
-            
+
             double mouseX = e.getX();
             double mouseY = e.getY();
             offsetX = mouseX - (mouseX - offsetX) * (scale / oldScale);
             offsetY = mouseY - (mouseY - offsetY) * (scale / oldScale);
 
-            //clampOffsets();
             repaint();
         });
 
@@ -66,36 +65,11 @@ public class ImageViewerPanel extends JPanel {
 
                     lastDrag = e.getPoint();
 
-                    //clampOffsets();
-
                     repaint();
 
                 }
             }
         });
-    }
-
-    /**
-     * Prevents the image to pass the borders
-     */
-    private void clampOffsets() {
-        if (image == null) return;
-        int panelWidth = getWidth();
-        int panelHeight = getHeight();
-        double imgWidth = image.getWidth() * scale;
-        double imgHeight = image.getHeight() * scale;
-
-        if (imgWidth <= panelWidth)
-            offsetX = (panelWidth - imgWidth) / 2;
-        else
-            offsetX = Math.min(offsetX, 0);
-        offsetX = Math.max(offsetX, panelWidth - imgWidth);
-
-        if (imgHeight <= panelHeight)
-            offsetY = (panelHeight - imgHeight) / 2;
-        else
-            offsetY = Math.min(offsetY, 0);
-        offsetY = Math.max(offsetY, panelHeight - imgHeight);
     }
 
     @Override

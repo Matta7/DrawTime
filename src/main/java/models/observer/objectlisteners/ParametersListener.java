@@ -1,6 +1,5 @@
 package models.observer.objectlisteners;
 
-import models.objects.Parameters;
 import models.observer.Listener;
 
 /**
