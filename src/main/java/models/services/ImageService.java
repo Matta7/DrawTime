@@ -1,36 +1,73 @@
 package models.services;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Deque;
+import java.util.*;
 
 public class ImageService {
-    private Deque<String> images;
 
-    private String currentImage;
+    private final Deque<BufferedImage> previousImages;
+    private final Deque<BufferedImage> images;
+
+    private BufferedImage currentImage;
 
     public ImageService() {
-
-    }
-
-    /**
-     * Load all images in the given repertory
-     *
-     * @param repertoryPath Repertory path containing all images
-     */
-    public void loadImagesFromRepertory(String repertoryPath) {
-
+        previousImages = new ArrayDeque<>();
+        images = new ArrayDeque<>();
     }
 
     public BufferedImage getCurrentImage() {
-        try {
-            return ImageIO.read(new File("C:\\Users\\Mat\\Pictures\\cat-laughing-4.png"));
-        } catch (IOException e) {
-            // Test
-        }
+        return currentImage;
+    }
 
-        return null;
+    public void setImages(Collection<BufferedImage> images) {
+        // Copy images to shuffle them
+        List<BufferedImage> imagesCopy = new ArrayList<>(images.stream().toList());
+        Collections.shuffle(imagesCopy);
+
+        // Push images
+        imagesCopy.forEach(this.images::push);
+        currentImage = this.images.pop();
+    }
+
+    /**
+     * Count all images
+     *
+     * @return The count of all images
+     */
+    public int countImages() {
+        return countRemainingImages() + previousImages.size();
+    }
+
+    /**
+     * Count all remaining images
+     *
+     * @return The count of the remaining images
+     */
+    public int countRemainingImages() {
+        if (currentImage == null) {
+            return 0;
+        } else {
+            return 1 + images.size();
+        }
+    }
+
+    /**
+     * Pass to the new image
+     */
+    public void nextImage() {
+        if (!images.isEmpty()) {
+            previousImages.push(currentImage);
+            currentImage = images.pop();
+        }
+    }
+
+    /**
+     * Pass to the previous image
+     */
+    public void previousImage() {
+        if (!previousImages.isEmpty()) {
+            images.push(currentImage);
+            currentImage = previousImages.pop();
+        }
     }
 }

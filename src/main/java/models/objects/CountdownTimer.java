@@ -45,6 +45,7 @@ public class CountdownTimer {
 
     public void setTime(int time) {
         this.time = time;
+        remainingSeconds = time;
     }
 
     public int getRemainingSeconds() {
@@ -90,7 +91,6 @@ public class CountdownTimer {
      * Start the timer
      */
     public void start() {
-        remainingSeconds = time;
         timer.start();
     }
 

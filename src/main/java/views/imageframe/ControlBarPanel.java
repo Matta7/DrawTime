@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class ControlBarPanel extends JPanel {
 
-    CountdownTimer timer;
+    private final CountdownTimer timer;
 
     private JLabel timerLabel;
 
@@ -25,6 +25,7 @@ public class ControlBarPanel extends JPanel {
     private void initialize() {
         setBorder(new MatteBorder(3, 0, 0, 0, Color.DARK_GRAY));
 
+        JButton previousButton;
         JButton pauseButton;
         JButton skipButton;
 
@@ -35,10 +36,12 @@ public class ControlBarPanel extends JPanel {
 
         // Pause button
         pauseButton = new JButton("Pause");
+        pauseButton.setToolTipText("Pause timer");
 
 
         // Skip button
         skipButton = new JButton("Skip");
+        skipButton.setToolTipText("Skip the image");
 
 
         // Add components

@@ -28,7 +28,7 @@ public class CommandInvoker {
     }
 
     public void executeCommand(Command command) {
-        this.command = command;
+        setCommand(command);
         executeCommand();
     }
 
