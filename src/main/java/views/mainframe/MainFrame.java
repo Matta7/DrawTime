@@ -1,8 +1,13 @@
 package views.mainframe;
 
+import models.constants.files.ImageFileConstants;
+import models.services.ImageLoaderService;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class MainFrame extends JFrame {
 
@@ -42,9 +47,19 @@ public class MainFrame extends JFrame {
 
         setContentPane(contentPane);
 
+        // Set icon
+        ImageLoaderService imageLoaderService = new ImageLoaderService();
+        try {
+            setIconImage(imageLoaderService.loadImage(ImageFileConstants.ICON));
+        } catch (IOException _) {
+            // Nothing to do
+        }
+
+
         pack();
         validate();
         setVisible(true);
+        
         setLocationRelativeTo(null);
     }
 }
