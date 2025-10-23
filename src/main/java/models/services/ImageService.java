@@ -10,10 +10,20 @@ public class ImageService {
 
     private BufferedImage currentImage;
 
+    private final Set<Runnable> onImageChangedActions;
+
+
+    // CONSTRUCTORS
+
     public ImageService() {
         previousImages = new ArrayDeque<>();
         images = new ArrayDeque<>();
+
+        onImageChangedActions = new HashSet<>();
     }
+
+
+    // GETTERS AND SETTERS
 
     public BufferedImage getCurrentImage() {
         return currentImage;
@@ -27,6 +37,17 @@ public class ImageService {
         // Push images
         imagesCopy.forEach(this.images::push);
         currentImage = this.images.pop();
+    }
+
+
+    // PUBLIC METHODS
+
+    public void addImageChangedAction(Runnable onImageChanged) {
+        onImageChangedActions.add(onImageChanged);
+    }
+
+    public void removeImageChangedAction(Runnable onImageChanged) {
+        onImageChangedActions.remove(onImageChanged);
     }
 
     /**
@@ -55,9 +76,14 @@ public class ImageService {
      * Pass to the new image
      */
     public void nextImage() {
-        if (!images.isEmpty()) {
+        if (currentImage != null) {
             previousImages.push(currentImage);
+        }
+        if (!images.isEmpty()) {
             currentImage = images.pop();
+            onImageChangedActions.forEach(Runnable::run);
+        } else {
+            currentImage = null;
         }
     }
 
@@ -66,8 +92,11 @@ public class ImageService {
      */
     public void previousImage() {
         if (!previousImages.isEmpty()) {
-            images.push(currentImage);
+            if (currentImage != null) {
+                images.push(currentImage);
+            }
             currentImage = previousImages.pop();
+            onImageChangedActions.forEach(Runnable::run);
         }
     }
 }

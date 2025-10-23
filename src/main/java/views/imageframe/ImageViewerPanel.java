@@ -1,5 +1,8 @@
 package views.imageframe;
 
+import controllers.Controller;
+import models.services.ImageService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -8,7 +11,8 @@ import java.awt.image.BufferedImage;
 
 public class ImageViewerPanel extends JPanel {
 
-    private final BufferedImage image;
+    private final ImageService imageService;
+    private BufferedImage image;
 
     private double scale = 1.0;
 
@@ -23,6 +27,9 @@ public class ImageViewerPanel extends JPanel {
     public ImageViewerPanel(BufferedImage image) {
         this.image = image;
         initialize();
+
+        imageService = Controller.getInstance().getImageService();
+        imageService.addImageChangedAction(() -> updateImage(imageService.getCurrentImage()));
     }
 
     private void initialize() {
@@ -66,10 +73,18 @@ public class ImageViewerPanel extends JPanel {
                     lastDrag = e.getPoint();
 
                     repaint();
-
                 }
             }
         });
+    }
+
+    public void updateImage(BufferedImage image) {
+        this.image = image;
+
+        scale = 1.0;
+        offsetX = 0;
+        offsetY = 0;
+        repaint();
     }
 
     @Override
@@ -80,12 +95,9 @@ public class ImageViewerPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.translate(offsetX, offsetY);
         g2.scale(scale, scale);
-        g2.drawImage(image, 0, 0, null);
-    }
 
-    @Override
-    public Dimension getPreferredSize() {
-        if (image == null) return new Dimension(400, 300);
-        return new Dimension(image.getWidth(), image.getHeight());
+        int x = Math.round((float) (getWidth() - image.getWidth()) / 2);
+        int y = Math.round((float) (getHeight() - image.getHeight()) / 2);
+        g2.drawImage(image, x, y, null);
     }
 }

@@ -5,12 +5,18 @@ import controllers.Controller;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Frame containing image viewer panel and control bar panel
+ */
 public class ImageFrame extends JFrame {
 
     public ImageFrame() {
         initialize();
     }
 
+    /**
+     * Initialize component
+     */
     private void initialize() {
         setTitle("DrawTime");
         setLayout(new BorderLayout());
@@ -22,6 +28,9 @@ public class ImageFrame extends JFrame {
         pack();
         validate();
         setVisible(true);
-        setLocationRelativeTo(null);
+
+        // Set full screen
+        setExtendedState(Frame.MAXIMIZED_BOTH);
+
     }
 }

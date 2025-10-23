@@ -13,7 +13,7 @@ public class StartCommand extends AbstractCommand {
         Parameters parameters = controller.getParameters();
 
         if (parameters.isValid()) {
-            controller.StartDrawing();
+            controller.startDrawing();
         } else {
             // TODO : open new frame or open dialog if invalid
         }

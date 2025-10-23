@@ -64,7 +64,7 @@ public class Parameters extends AbstractListenable {
      * Update parameters validity
      */
     private void updateValidity() {
-        boolean newValid = filePath != null && !filePath.isEmpty() && timePerImage < 30 && timePerImage > 1;
+        boolean newValid = filePath != null && !filePath.isEmpty() && timePerImage < 60 && timePerImage > 0;
 
         if (newValid != valid) {
             valid = newValid;

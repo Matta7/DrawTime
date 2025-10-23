@@ -14,28 +14,18 @@ import java.util.List;
 
 public class Controller {
 
+    // Singleton pattern
+
     private static final Controller instance = new Controller();
-
-
-    // Model
-
-    private Parameters parameters;
-
-    private final CountdownTimer timer;
-
-    private final ImageService imageService;
-
-
-    // View
-
-    private ImageFrame imageFrame;
 
     private Controller() {
         parameters = new Parameters();
         timer = new CountdownTimer();
         imageService = new ImageService();
-    }
 
+        // When timer has timeout, go to the next image
+        timer.addTimeoutAction(imageService::nextImage);
+    }
 
     /**
      * Retrieve the instance of the controller
@@ -45,6 +35,21 @@ public class Controller {
     public static Controller getInstance() {
         return instance;
     }
+
+
+    // PROPERTIES
+
+    // Model
+
+    private Parameters parameters;
+
+    private final CountdownTimer timer;
+
+    private final ImageService imageService;
+
+    // View
+
+    private ImageFrame imageFrame;
 
 
     // GETTERS AND SETTERS
@@ -66,19 +71,31 @@ public class Controller {
     }
 
 
-    // METHODS
+    // PUBLIC METHODS
 
-    public void StartDrawing() {
+    /**
+     * Run application
+     */
+    public void run() {
+        new MainFrame();
+    }
+
+    /**
+     * Start timer and open image frame
+     */
+    public void startDrawing() {
         if (imageFrame == null) {
             // Initialize the timer
             timer.setTime(parameters.getTimePerImage() * 60);
 
+            // Load images
             ImageLoaderService imageLoaderService = new ImageLoaderService();
             List<BufferedImage> images = imageLoaderService.loadAllImagesFromDirectory(parameters.getFilePath());
 
-            if (images.size() > 0) {
+            if (!images.isEmpty()) {
                 imageService.setImages(images);
 
+                // Open image frame
                 imageFrame = new ImageFrame();
                 imageFrame.addWindowListener(new WindowAdapter() {
                     @Override
@@ -87,14 +104,11 @@ public class Controller {
                     }
                 });
 
+                // Start timer
                 timer.start();
             } else {
                 // TODO : Open dialog
             }
         }
-    }
-
-    public void run() {
-        new MainFrame();
     }
 }
