@@ -36,21 +36,23 @@ public class ImageLoaderService {
      * Load all images from a directory
      *
      * @param dirPath Directory path
+     * @param recursive If true, take all directories under the given directory
      * @return Loaded images that are directly under the directory
      */
-    public List<BufferedImage> loadAllImagesFromDirectory(String dirPath) {
-        List<BufferedImage> result = new ArrayList<>();
+    public List<String> retrieveAllImagesFromDirectory(String dirPath, boolean recursive) {
+        List<String> result = new ArrayList<>();
 
         File directory = new File(dirPath);
         if (directory.exists() && directory.isDirectory()) {
             for (File file : Objects.requireNonNull(directory.listFiles())) {
-                try {
-                    BufferedImage image = loadImage(file);
+                String imagePath = file.getAbsolutePath();
 
-                    if (isFileImage(file)) {
-                        result.add(image);
-                    }
-                } catch (IOException _) {
+                if (isFileImage(file)) {
+                    result.add(imagePath);
+                }
+                // If recursive, check images in all directories under root directory
+                else if (recursive && file.isDirectory()) {
+                    result.addAll(retrieveAllImagesFromDirectory(imagePath, true));
                 }
             }
         }
@@ -70,5 +72,9 @@ public class ImageLoaderService {
         } catch (IOException _) {
         }
         return false;
+    }
+
+    public boolean isFileImage(String filePath) {
+        return isFileImage(new File(filePath));
     }
 }

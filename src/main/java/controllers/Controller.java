@@ -90,7 +90,7 @@ public class Controller {
 
             // Load images
             ImageLoaderService imageLoaderService = new ImageLoaderService();
-            List<BufferedImage> images = imageLoaderService.loadAllImagesFromDirectory(parameters.getFilePath());
+            List<String> images = imageLoaderService.retrieveAllImagesFromDirectory(parameters.getFilePath(), true);
 
             if (!images.isEmpty()) {
                 imageService.setImages(images);

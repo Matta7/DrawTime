@@ -29,7 +29,7 @@ public class ImageViewerPanel extends JPanel {
         initialize();
 
         imageService = Controller.getInstance().getImageService();
-        imageService.addImageChangedAction(() -> updateImage(imageService.getCurrentImage()));
+        imageService.addImageChangedAction(() -> updateImage(imageService.getCurrentImageAsBufferedImage()));
     }
 
     private void initialize() {
