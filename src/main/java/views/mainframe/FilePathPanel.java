@@ -31,7 +31,7 @@ public class FilePathPanel extends JPanel implements ParametersListener {
 
 
         // Text field
-        textField = new JTextField();
+        textField = new JTextField(Controller.getInstance().getParameters().getFilePath());
         textField.setPreferredSize(new Dimension(450, 25));
         textField.setEditable(false);
 

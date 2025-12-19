@@ -34,7 +34,7 @@ public class TimePanel extends JPanel implements ParametersListener {
         formatter = new NumberFormatter(NumberFormat.getInstance());
         formatter.setValueClass(Integer.class);
         formatter.setMinimum(TIME_PER_IMAGE_MIN);
-        formatter.setMaximum(TIME_PER_IMAGE_MAX_DEFAULT);
+        formatter.setMaximum(TIME_PER_IMAGE_MAX);
         formatter.setAllowsInvalid(false);
     }
 
@@ -44,6 +44,8 @@ public class TimePanel extends JPanel implements ParametersListener {
     private void initialize() {
         JLabel label;
 
+        int defaultTimerPerImageValue = Controller.getInstance().getParameters().getTimePerImage();
+
 
         // Label
         label = new JLabel("Time per image (minute) :");
@@ -51,11 +53,11 @@ public class TimePanel extends JPanel implements ParametersListener {
 
         // Text field
         textField = new JFormattedTextField(formatter);
-        textField.setText(String.valueOf(TIME_PER_IMAGE_INIT));
+        textField.setText(String.valueOf(defaultTimerPerImageValue));
 
 
         // Slider
-        timeSlider = new JSlider(SwingConstants.HORIZONTAL, TIME_PER_IMAGE_MIN, TIME_PER_IMAGE_MAX_DEFAULT, TIME_PER_IMAGE_INIT);
+        timeSlider = new JSlider(SwingConstants.HORIZONTAL, TIME_PER_IMAGE_MIN, TIME_PER_IMAGE_MAX, defaultTimerPerImageValue);
         timeSlider.setToolTipText("Miaou");
         timeSlider.setPreferredSize(new Dimension(400, 50));
 
