@@ -1,14 +1,15 @@
 package models.services;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 
 public class ImageService {
 
-    private final Deque<BufferedImage> previousImages;
-    private final Deque<BufferedImage> images;
+    private final Deque<String> previousImages;
+    private final Deque<String> images;
 
-    private BufferedImage currentImage;
+    private String currentImage;
 
     private final Set<Runnable> onImageChangedActions;
 
@@ -25,13 +26,30 @@ public class ImageService {
 
     // GETTERS AND SETTERS
 
-    public BufferedImage getCurrentImage() {
+    public String getCurrentImage() {
         return currentImage;
     }
 
-    public void setImages(Collection<BufferedImage> images) {
+    /**
+     * Retrieve current image as BufferedImage.
+     * If current image failed to load, load next image as BufferedImage
+     *
+     * @return Current image as BufferedImage
+     */
+    public BufferedImage getCurrentImageAsBufferedImage() {
+        try {
+            ImageLoaderService imageLoaderService = new ImageLoaderService();
+            return imageLoaderService.loadImage(currentImage);
+        } catch (IOException _) {
+            currentImage = null;
+            nextImage();
+            return getCurrentImageAsBufferedImage();
+        }
+    }
+
+    public void setImages(Collection<String> images) {
         // Copy images to shuffle them
-        List<BufferedImage> imagesCopy = new ArrayList<>(images.stream().toList());
+        List<String> imagesCopy = new ArrayList<>(images.stream().toList());
         Collections.shuffle(imagesCopy);
 
         // Push images

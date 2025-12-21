@@ -7,9 +7,7 @@ public class TimePanelConstants {
 
     public static final int TIME_PER_IMAGE_MIN = 0;
 
-    public static final int TIME_PER_IMAGE_MAX_DEFAULT = 30;
-
-    public static final int TIME_PER_IMAGE_INIT = 5;
+    public static final int TIME_PER_IMAGE_MAX = 30;
 
     public static final int MINOR_TICK_SPACING = 5;
 

@@ -1,7 +1,9 @@
 package views.imageframe;
 
 import controllers.Controller;
-import models.constants.files.ImageFileConstants;
+
+import static models.constants.files.ImageFileConstants.ICON;
+
 import models.services.ImageLoaderService;
 
 import javax.swing.*;
@@ -25,13 +27,13 @@ public class ImageFrame extends JFrame {
         setLayout(new BorderLayout());
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        add(new ImageViewerPanel(Controller.getInstance().getImageService().getCurrentImage()), BorderLayout.CENTER);
+        add(new ImageViewerPanel(Controller.getInstance().getImageService().getCurrentImageAsBufferedImage()), BorderLayout.CENTER);
         add(new ControlBarPanel(), BorderLayout.SOUTH);
 
         // Set icon
         ImageLoaderService imageLoaderService = new ImageLoaderService();
         try {
-            setIconImage(imageLoaderService.loadImage(ImageFileConstants.ICON));
+            setIconImage(imageLoaderService.loadImage(ICON));
         } catch (IOException _) {
             // Nothing to do
         }

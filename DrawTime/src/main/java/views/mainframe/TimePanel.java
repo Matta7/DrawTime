@@ -1,7 +1,7 @@
 package views.mainframe;
 
 import controllers.Controller;
-import models.constants.ui.TimePanelConstants;
+import static models.constants.ui.TimePanelConstants.*;
 import models.observer.objectlisteners.ParametersListener;
 
 import javax.swing.*;
@@ -33,8 +33,8 @@ public class TimePanel extends JPanel implements ParametersListener {
     private void initializeFormatter() {
         formatter = new NumberFormatter(NumberFormat.getInstance());
         formatter.setValueClass(Integer.class);
-        formatter.setMinimum(TimePanelConstants.TIME_PER_IMAGE_MIN);
-        formatter.setMaximum(TimePanelConstants.TIME_PER_IMAGE_MAX_DEFAULT);
+        formatter.setMinimum(TIME_PER_IMAGE_MIN);
+        formatter.setMaximum(TIME_PER_IMAGE_MAX);
         formatter.setAllowsInvalid(false);
     }
 
@@ -44,6 +44,8 @@ public class TimePanel extends JPanel implements ParametersListener {
     private void initialize() {
         JLabel label;
 
+        int defaultTimerPerImageValue = Controller.getInstance().getParameters().getTimePerImage();
+
 
         // Label
         label = new JLabel("Time per image (minute) :");
@@ -51,17 +53,17 @@ public class TimePanel extends JPanel implements ParametersListener {
 
         // Text field
         textField = new JFormattedTextField(formatter);
-        textField.setText(String.valueOf(TimePanelConstants.TIME_PER_IMAGE_INIT));
+        textField.setText(String.valueOf(defaultTimerPerImageValue));
 
 
         // Slider
-        timeSlider = new JSlider(SwingConstants.HORIZONTAL, TimePanelConstants.TIME_PER_IMAGE_MIN, TimePanelConstants.TIME_PER_IMAGE_MAX_DEFAULT, TimePanelConstants.TIME_PER_IMAGE_INIT);
+        timeSlider = new JSlider(SwingConstants.HORIZONTAL, TIME_PER_IMAGE_MIN, TIME_PER_IMAGE_MAX, defaultTimerPerImageValue);
         timeSlider.setToolTipText("Miaou");
         timeSlider.setPreferredSize(new Dimension(400, 50));
 
         timeSlider.setSnapToTicks(true);
-        timeSlider.setMinorTickSpacing(TimePanelConstants.MINOR_TICK_SPACING);
-        timeSlider.setMajorTickSpacing(TimePanelConstants.MAJOR_TICK_SPACING);
+        timeSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
+        timeSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
 
         timeSlider.setPaintTicks(true);
         timeSlider.setPaintLabels(true);

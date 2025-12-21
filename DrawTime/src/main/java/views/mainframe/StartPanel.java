@@ -25,7 +25,7 @@ public class StartPanel extends JPanel implements ParametersListener {
         // Start button
         startButton = new JButton("Start");
         startButton.addActionListener(_ -> CommandInvoker.getInstance().executeCommand(new StartCommand()));
-        startButton.setEnabled(false);
+        startButton.setEnabled(Controller.getInstance().getParameters().isValid());
 
 
         // Add components

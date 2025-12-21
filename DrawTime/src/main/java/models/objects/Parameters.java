@@ -1,17 +1,28 @@
 package models.objects;
 
+import static models.constants.preferences.PreferencesNameConstants.*;
 import models.observer.AbstractListenable;
 import models.observer.objectlisteners.ParametersListener;
+import models.services.PreferenceService;
+
+import java.util.prefs.Preferences;
 
 public class Parameters extends AbstractListenable {
 
+    private final PreferenceService prefService;
+
     private String filePath;
 
-    private int timePerImage = 5;
+    private int timePerImage;
 
     private boolean valid = false;
 
     public Parameters() {
+        prefService = new PreferenceService();
+
+        setFilePath(prefService.getValue(PARAM_ROOT_DIRECTORY_PATH_PREF).asString());
+        setTimePerImage(prefService.getValue(PARAM_TIME_PER_IMAGE_PREF).asInt());
+
         updateValidity();
     }
 
@@ -34,6 +45,11 @@ public class Parameters extends AbstractListenable {
 
         // Update validity
         updateValidity();
+
+        // Update preferences if valid
+        if (isFilePathValid()) {
+            prefService.setValue(PARAM_ROOT_DIRECTORY_PATH_PREF, filePath);
+        }
     }
 
     public int getTimePerImage() {
@@ -52,6 +68,11 @@ public class Parameters extends AbstractListenable {
 
         // Update validity
         updateValidity();
+
+        // Update preferences if valid
+        if (isTimePerImageValid()) {
+            prefService.setValue(PARAM_TIME_PER_IMAGE_PREF, timePerImage);
+        }
     }
 
     public boolean isValid() {
@@ -64,7 +85,7 @@ public class Parameters extends AbstractListenable {
      * Update parameters validity
      */
     private void updateValidity() {
-        boolean newValid = filePath != null && !filePath.isEmpty() && timePerImage < 60 && timePerImage > 0;
+        boolean newValid = isFilePathValid() && isTimePerImageValid();
 
         if (newValid != valid) {
             valid = newValid;
@@ -75,5 +96,25 @@ public class Parameters extends AbstractListenable {
                 l.onChange(this);
             });
         }
+    }
+
+    /**
+     * Check if file path is valid
+     * A file path is valid if file path is not null or empty
+     *
+     * @return True if file path is valid, false otherwise
+     */
+    private boolean isFilePathValid() {
+        return filePath != null && !filePath.isEmpty();
+    }
+
+    /**
+     * Check if time per image is valid
+     * Time per image is valid if value is between 0 (excluded) and 60 (included)
+     *
+     * @return True if time per image is valid, false otherwise
+     */
+    private boolean isTimePerImageValid() {
+        return timePerImage > 0 && timePerImage < 60;
     }
 }

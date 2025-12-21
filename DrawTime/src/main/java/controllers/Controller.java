@@ -9,7 +9,6 @@ import views.mainframe.MainFrame;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class Controller {
@@ -90,7 +89,7 @@ public class Controller {
 
             // Load images
             ImageLoaderService imageLoaderService = new ImageLoaderService();
-            List<BufferedImage> images = imageLoaderService.loadAllImagesFromDirectory(parameters.getFilePath());
+            List<String> images = imageLoaderService.retrieveAllImagesFromDirectory(parameters.getFilePath(), true);
 
             if (!images.isEmpty()) {
                 imageService.setImages(images);
