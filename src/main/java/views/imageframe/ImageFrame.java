@@ -5,6 +5,7 @@ import controllers.Controller;
 import static models.constants.files.ImageFileConstants.ICON;
 
 import models.services.ImageLoaderService;
+import views.components.swing_components.DTFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,16 +14,14 @@ import java.io.IOException;
 /**
  * Frame containing image viewer panel and control bar panel
  */
-public class ImageFrame extends JFrame {
+public class ImageFrame extends DTFrame {
 
     public ImageFrame() {
         initialize();
     }
 
-    /**
-     * Initialize component
-     */
-    private void initialize() {
+    @Override
+    protected void initialize() {
         setTitle("DrawTime");
         setLayout(new BorderLayout());
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

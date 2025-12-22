@@ -2,22 +2,21 @@ package views.mainframe;
 
 import models.constants.files.ImageFileConstants;
 import models.services.ImageLoaderService;
+import views.components.swing_components.DTFrame;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.IOException;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends DTFrame {
 
     public MainFrame() {
-        initialize();
+        super();
     }
 
-    /**
-     * Initialize the frame
-     */
-    private void initialize() {
+    @Override
+    protected void initialize() {
         setTitle("Draw Time");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 

@@ -44,16 +44,21 @@ public class ImageLoaderService {
 
         File directory = new File(dirPath);
         if (directory.exists() && directory.isDirectory()) {
-            for (File file : Objects.requireNonNull(directory.listFiles())) {
-                String imagePath = file.getAbsolutePath();
+            try {
+                for (File file : Objects.requireNonNull(directory.listFiles())) {
+                    String imagePath = file.getAbsolutePath();
 
-                if (isFileImage(imagePath)) {
-                    result.add(imagePath);
+                    if (isFileImage(imagePath)) {
+                        result.add(imagePath);
+                    }
+                    // If recursive, check images in all directories under root directory
+                    else if (recursive && file.isDirectory()) {
+                        result.addAll(retrieveAllImagesFromDirectory(imagePath, true));
+                    }
                 }
-                // If recursive, check images in all directories under root directory
-                else if (recursive && file.isDirectory()) {
-                    result.addAll(retrieveAllImagesFromDirectory(imagePath, true));
-                }
+            }
+            catch (NullPointerException _) {
+                // Nothing to do
             }
         }
 

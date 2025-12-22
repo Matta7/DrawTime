@@ -11,12 +11,14 @@ public class ImageService {
 
     private String currentImage;
 
+    private final Set<Runnable> onImageServiceReadyActions;
     private final Set<Runnable> onImageChangedActions;
 
 
     // CONSTRUCTORS
 
     public ImageService() {
+        onImageServiceReadyActions = new HashSet<>();
         onImageChangedActions = new HashSet<>();
     }
 
@@ -55,10 +57,20 @@ public class ImageService {
         // Push images
         imagesCopy.forEach(this.images::push);
         currentImage = this.images.pop();
+
+        onImageServiceReadyActions.forEach(Runnable::run);
     }
 
 
     // PUBLIC METHODS
+
+    public void addImageServiceReadyAction(Runnable action) {
+        onImageServiceReadyActions.add(action);
+    }
+
+    public void removeImageServiceReadyAction(Runnable action) {
+        onImageServiceReadyActions.remove(action);
+    }
 
     public void addImageChangedAction(Runnable onImageChanged) {
         onImageChangedActions.add(onImageChanged);

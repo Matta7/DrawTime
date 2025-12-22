@@ -24,6 +24,9 @@ public class Controller {
 
         // When timer has timeout, go to the next image
         timer.addTimeoutAction(imageService::nextImage);
+
+        // When image service is ready, open image frame and start timer
+        imageService.addImageServiceReadyAction(this::onImageServiceReady);
     }
 
     /**
@@ -47,6 +50,8 @@ public class Controller {
     private final ImageService imageService;
 
     // View
+
+    private MainFrame mainFrame;
 
     private ImageFrame imageFrame;
 
@@ -76,7 +81,7 @@ public class Controller {
      * Run application
      */
     public void run() {
-        new MainFrame();
+        mainFrame = new MainFrame();
     }
 
     /**
@@ -87,27 +92,37 @@ public class Controller {
             // Initialize the timer
             timer.setTime(parameters.getTimePerImage() * 60);
 
-            // Load images
-            ImageLoaderService imageLoaderService = new ImageLoaderService();
-            List<String> images = imageLoaderService.retrieveAllImagesFromDirectory(parameters.getFilePath(), true);
+            // Load images with a thread
+            new Thread(() -> {
+                ImageLoaderService imageLoaderService = new ImageLoaderService();
+                List<String> images = imageLoaderService.retrieveAllImagesFromDirectory(parameters.getFilePath(), true);
 
-            if (!images.isEmpty()) {
-                imageService.setImages(images);
-
-                // Open image frame
-                imageFrame = new ImageFrame();
-                imageFrame.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-                        imageFrame = null;
-                    }
-                });
-
-                // Start timer
-                timer.start();
-            } else {
-                // TODO : Open dialog
-            }
+                if (!images.isEmpty()) {
+                    imageService.setImages(images);
+                }
+                else {
+                    mainFrame.showErrorMessageDialog("No images found. Try choosing a directory that contains images.", "No images found");
+                }
+            }).start();
         }
+    }
+
+    // EVENT HANDLER METHODS
+
+    /**
+     * Called when image service is ready
+     */
+    public void onImageServiceReady() {
+        // Open image frame
+        imageFrame = new ImageFrame();
+        imageFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                imageFrame = null;
+            }
+        });
+
+        // Start timer
+        timer.start();
     }
 }
