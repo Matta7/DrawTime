@@ -47,7 +47,7 @@ public class ImageLoaderService {
             for (File file : Objects.requireNonNull(directory.listFiles())) {
                 String imagePath = file.getAbsolutePath();
 
-                if (isFileImage(file)) {
+                if (isFileImage(imagePath)) {
                     result.add(imagePath);
                 }
                 // If recursive, check images in all directories under root directory
@@ -70,11 +70,18 @@ public class ImageLoaderService {
         try {
             return loadImage(file) != null;
         } catch (IOException _) {
+            // Nothing to do
         }
         return false;
     }
 
+    /**
+     * Check if a file is an image using its path
+     *
+     * @param filePath Path of the file to check
+     * @return True if the file path is an image, false otherwise
+     */
     public boolean isFileImage(String filePath) {
-        return isFileImage(new File(filePath));
+        return filePath.toLowerCase().endsWith(".png") || filePath.toLowerCase().endsWith(".jpg") || filePath.toLowerCase().endsWith(".jpeg");
     }
 }

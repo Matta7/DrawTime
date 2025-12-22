@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>DrawTime</artifactId>
-    <version>1.1</version>
+    <version>1.11</version>
     <name>DrawTime</name>
     <description>DrawTime</description>
     <packaging>jar</packaging>
