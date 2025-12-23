@@ -16,10 +16,6 @@ import java.io.IOException;
  */
 public class ImageFrame extends DTFrame {
 
-    public ImageFrame() {
-        initialize();
-    }
-
     @Override
     protected void initialize() {
         setTitle("DrawTime");

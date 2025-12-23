@@ -11,10 +11,6 @@ import java.io.IOException;
 
 public class MainFrame extends DTFrame {
 
-    public MainFrame() {
-        super();
-    }
-
     @Override
     protected void initialize() {
         setTitle("Draw Time");

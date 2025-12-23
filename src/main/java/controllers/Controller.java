@@ -4,6 +4,7 @@ import models.objects.CountdownTimer;
 import models.objects.Parameters;
 import models.services.ImageLoaderService;
 import models.services.ImageService;
+import views.components.ProgressBarDialog;
 import views.imageframe.ImageFrame;
 import views.mainframe.MainFrame;
 
@@ -94,8 +95,15 @@ public class Controller {
 
             // Load images with a thread
             new Thread(() -> {
+                // Open progress bar
+                ProgressBarDialog progressBarDialog = new ProgressBarDialog(mainFrame);
+
+                // Load images
                 ImageLoaderService imageLoaderService = new ImageLoaderService();
                 List<String> images = imageLoaderService.retrieveAllImagesFromDirectory(parameters.getFilePath(), true);
+
+                // Dispose progress bar
+                progressBarDialog.dispose();
 
                 if (!images.isEmpty()) {
                     imageService.setImages(images);
