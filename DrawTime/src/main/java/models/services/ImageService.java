@@ -6,20 +6,19 @@ import java.util.*;
 
 public class ImageService {
 
-    private final Deque<String> previousImages;
-    private final Deque<String> images;
+    private Deque<String> previousImages;
+    private Deque<String> images;
 
     private String currentImage;
 
+    private final Set<Runnable> onImageServiceReadyActions;
     private final Set<Runnable> onImageChangedActions;
 
 
     // CONSTRUCTORS
 
     public ImageService() {
-        previousImages = new ArrayDeque<>();
-        images = new ArrayDeque<>();
-
+        onImageServiceReadyActions = new HashSet<>();
         onImageChangedActions = new HashSet<>();
     }
 
@@ -52,13 +51,26 @@ public class ImageService {
         List<String> imagesCopy = new ArrayList<>(images.stream().toList());
         Collections.shuffle(imagesCopy);
 
+        this.previousImages = new ArrayDeque<>();
+        this.images = new ArrayDeque<>();
+
         // Push images
         imagesCopy.forEach(this.images::push);
         currentImage = this.images.pop();
+
+        onImageServiceReadyActions.forEach(Runnable::run);
     }
 
 
     // PUBLIC METHODS
+
+    public void addImageServiceReadyAction(Runnable action) {
+        onImageServiceReadyActions.add(action);
+    }
+
+    public void removeImageServiceReadyAction(Runnable action) {
+        onImageServiceReadyActions.remove(action);
+    }
 
     public void addImageChangedAction(Runnable onImageChanged) {
         onImageChangedActions.add(onImageChanged);

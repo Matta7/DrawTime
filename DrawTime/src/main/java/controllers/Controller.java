@@ -4,6 +4,7 @@ import models.objects.CountdownTimer;
 import models.objects.Parameters;
 import models.services.ImageLoaderService;
 import models.services.ImageService;
+import views.components.ProgressBarDialog;
 import views.imageframe.ImageFrame;
 import views.mainframe.MainFrame;
 
@@ -24,6 +25,9 @@ public class Controller {
 
         // When timer has timeout, go to the next image
         timer.addTimeoutAction(imageService::nextImage);
+
+        // When image service is ready, open image frame and start timer
+        imageService.addImageServiceReadyAction(this::onImageServiceReady);
     }
 
     /**
@@ -47,6 +51,8 @@ public class Controller {
     private final ImageService imageService;
 
     // View
+
+    private MainFrame mainFrame;
 
     private ImageFrame imageFrame;
 
@@ -76,7 +82,7 @@ public class Controller {
      * Run application
      */
     public void run() {
-        new MainFrame();
+        mainFrame = new MainFrame();
     }
 
     /**
@@ -87,27 +93,44 @@ public class Controller {
             // Initialize the timer
             timer.setTime(parameters.getTimePerImage() * 60);
 
-            // Load images
-            ImageLoaderService imageLoaderService = new ImageLoaderService();
-            List<String> images = imageLoaderService.retrieveAllImagesFromDirectory(parameters.getFilePath(), true);
+            // Load images with a thread
+            new Thread(() -> {
+                // Open progress bar
+                ProgressBarDialog progressBarDialog = new ProgressBarDialog(mainFrame);
 
-            if (!images.isEmpty()) {
-                imageService.setImages(images);
+                // Load images
+                ImageLoaderService imageLoaderService = new ImageLoaderService();
+                List<String> images = imageLoaderService.retrieveAllImagesFromDirectory(parameters.getFilePath(), true);
 
-                // Open image frame
-                imageFrame = new ImageFrame();
-                imageFrame.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-                        imageFrame = null;
-                    }
-                });
+                // Dispose progress bar
+                progressBarDialog.dispose();
 
-                // Start timer
-                timer.start();
-            } else {
-                // TODO : Open dialog
-            }
+                if (!images.isEmpty()) {
+                    imageService.setImages(images);
+                }
+                else {
+                    mainFrame.showErrorMessageDialog("No images found. Try choosing a directory that contains images.", "No images found");
+                }
+            }).start();
         }
+    }
+
+    // EVENT HANDLER METHODS
+
+    /**
+     * Called when image service is ready
+     */
+    public void onImageServiceReady() {
+        // Open image frame
+        imageFrame = new ImageFrame();
+        imageFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                imageFrame = null;
+            }
+        });
+
+        // Start timer
+        timer.start();
     }
 }
