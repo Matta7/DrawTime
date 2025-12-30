@@ -1,5 +1,7 @@
 package controllers;
 
+import models.commands.CommandInvoker;
+import models.commands.concrete.NextImageCommand;
 import models.objects.CountdownTimer;
 import models.objects.Parameters;
 import models.services.ImageLoaderService;
@@ -24,7 +26,7 @@ public class Controller {
         imageService = new ImageService();
 
         // When timer has timeout, go to the next image
-        timer.addTimeoutAction(imageService::nextImage);
+        timer.addTimeoutAction(() -> CommandInvoker.getInstance().executeCommand(new NextImageCommand()));
 
         // When image service is ready, open image frame and start timer
         imageService.addImageServiceReadyAction(this::onImageServiceReady);
