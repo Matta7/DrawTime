@@ -38,7 +38,7 @@ public class ImageService {
     public BufferedImage getCurrentImageAsBufferedImage() {
         try {
             ImageLoaderService imageLoaderService = new ImageLoaderService();
-            return imageLoaderService.loadImage(currentImage);
+            return (BufferedImage) imageLoaderService.loadImage(currentImage);
         } catch (IOException _) {
             currentImage = null;
             nextImage();

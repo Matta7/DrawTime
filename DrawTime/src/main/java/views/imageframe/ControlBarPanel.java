@@ -1,21 +1,30 @@
 package views.imageframe;
 
+import static models.constants.files.IconsFileConstants.*;
+
 import controllers.Controller;
 import models.commands.CommandInvoker;
 import models.commands.concrete.*;
 import models.objects.CountdownTimer;
+import models.services.ImageLoaderService;
 import models.services.ImageService;
 import views.components.InterchangeableComponents;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.io.IOException;
 
 public class ControlBarPanel extends JPanel {
+
+    private static final int BUTTONS_SCALE = 32;
 
     private final CountdownTimer timer;
     private final ImageService imageService;
 
+    private JButton pauseButton;
+    private JButton resumeButton;
+    private JButton resetButton;
     private JButton previousButton;
     private JButton skipButton;
 
@@ -42,10 +51,6 @@ public class ControlBarPanel extends JPanel {
     private void initialize() {
         setBorder(new MatteBorder(3, 0, 0, 0, Color.DARK_GRAY));
 
-        JButton resetButton;
-        JButton pauseButton;
-        JButton resumeButton;
-
         InterchangeableComponents<JButton, JButton> pauseResumeButtonComponent;
 
 
@@ -53,30 +58,38 @@ public class ControlBarPanel extends JPanel {
         timerLabel = new JLabel(timer.getFormattedTime());
 
 
-        // Pause button
-        pauseButton = new JButton("Pause");
+        // Load icons and buttons
+        try {
+            ImageLoaderService imageLoaderService = new ImageLoaderService();
+
+            ImageIcon pauseTimerIcon = new ImageIcon(imageLoaderService.loadImage(PAUSE_ICON, BUTTONS_SCALE));
+            ImageIcon resumeTimerIcon = new ImageIcon(imageLoaderService.loadImage(PLAY_ICON, BUTTONS_SCALE));
+            ImageIcon resetTimerIcon = new ImageIcon(imageLoaderService.loadImage(RESET_ICON, BUTTONS_SCALE));
+            ImageIcon nextImageIcon = new ImageIcon(imageLoaderService.loadImage(NEXT_ICON, BUTTONS_SCALE));
+            ImageIcon previousImageIcon = new ImageIcon(imageLoaderService.loadImage(PREVIOUS_ICON, BUTTONS_SCALE));
+
+            pauseButton = new JButton(pauseTimerIcon);
+            resumeButton = new JButton(resumeTimerIcon);
+            resetButton = new JButton(resetTimerIcon);
+            skipButton = new JButton(nextImageIcon);
+            previousButton = new JButton(previousImageIcon);
+        } catch (IOException _) {
+            pauseButton = new JButton("Pause");
+            resumeButton = new JButton("Resume");
+            resetButton = new JButton("Reset");
+            skipButton = new JButton("Skip");
+            previousButton = new JButton("Previous");
+        } finally {
+            previousButton.setEnabled(false);
+        }
+
+
+        // Tooltips
         pauseButton.setToolTipText("Pause timer");
-
-
-        // Resume button
-        resumeButton = new JButton("Resume");
         resumeButton.setToolTipText("Resume timer");
-
-
-        // Reset button
-        resetButton = new JButton("Reset");
         resetButton.setToolTipText("Reset timer");
-
-
-        // Skip button
-        skipButton = new JButton("Skip");
-        skipButton.setToolTipText("Skip the image");
-
-
-        // Previous button
-        previousButton = new JButton("Previous");
-        previousButton.setToolTipText("Go to previous image");
-        previousButton.setEnabled(false);
+        skipButton.setToolTipText("Next image");
+        previousButton.setToolTipText("Previous image");
 
 
         // Interchangeable components with pause and resume button

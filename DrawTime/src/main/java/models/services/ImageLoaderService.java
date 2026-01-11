@@ -1,6 +1,8 @@
 package models.services;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +19,20 @@ public class ImageLoaderService {
      * @return The loaded image
      * @throws IOException Thrown exception if image has failed to read
      */
-    public BufferedImage loadImage(String filePath) throws IOException {
+    public Image loadImage(String filePath) throws IOException {
         return loadImage(new File(filePath));
+    }
+
+    /**
+     * Load an image from its path
+     *
+     * @param filePath Path of the file
+     * @param scale Final scale of the image
+     * @return The loaded image
+     * @throws IOException Thrown exception if image has failed to read
+     */
+    public Image loadImage(String filePath, int scale) throws IOException {
+        return loadImage(new File(filePath), scale);
     }
 
     /**
@@ -28,9 +42,68 @@ public class ImageLoaderService {
      * @return The loaded image
      * @throws IOException Thrown exception if image has failed to read
      */
-    public BufferedImage loadImage(File file) throws IOException {
+    public Image loadImage(File file) throws IOException {
         return ImageIO.read(file);
     }
+
+    /**
+     * Load an image from a file
+     *
+     * @param file File to load as image
+     * @param scale Final scale of the image
+     * @return The loaded image
+     * @throws IOException Thrown exception if image has failed to read
+     */
+    public Image loadImage(File file, int scale) throws IOException {
+        return loadImage(file).getScaledInstance(scale, scale, Image.SCALE_SMOOTH);
+    }
+
+    /**
+     * Load an image as ImageIcon from its path
+     *
+     * @param filePath Path of the file
+     * @return The loaded image
+     * @throws IOException Thrown exception if image has failed to read
+     */
+    public ImageIcon loadImageIcon(String filePath) throws IOException {
+        return new ImageIcon(loadImage(filePath));
+    }
+
+    /**
+     * Load an image as ImageIcon from its path
+     *
+     * @param filePath Path of the file
+     * @param scale Final scale of the image
+     * @return The loaded image
+     * @throws IOException Thrown exception if image has failed to read
+     */
+    public ImageIcon loadImageIcon(String filePath, int scale) throws IOException {
+        return new ImageIcon(loadImage(filePath, scale));
+    }
+
+    /**
+     * Load an image as ImageIcon from a file
+     *
+     * @param file File to load as image
+     * @return The loaded image
+     * @throws IOException Thrown exception if image has failed to read
+     */
+    public ImageIcon loadImageIcon(File file) throws IOException {
+        return new ImageIcon(loadImage(file));
+    }
+
+    /**
+     * Load an image as ImageIcon from a file
+     *
+     * @param file File to load as image
+     * @param scale Final scale of the image
+     * @return The loaded image
+     * @throws IOException Thrown exception if image has failed to read
+     */
+    public ImageIcon loadImageIcon(File file, int scale) throws IOException {
+        return new ImageIcon(loadImage(file, scale));
+    }
+
 
     /**
      * Load all images from a directory
