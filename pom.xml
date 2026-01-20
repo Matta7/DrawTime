@@ -16,6 +16,9 @@
         <maven.compiler.target>22</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>run.Main</main.class>
+
+        <app.name>${project.name}</app.name>
+        <app.version>${project.version}</app.version>
     </properties>
 
     <build>
@@ -52,6 +55,12 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <dependencies>
@@ -61,5 +70,4 @@
             <version>3.6.2</version>
         </dependency>
     </dependencies>
-
 </project>
