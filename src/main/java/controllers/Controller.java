@@ -1,6 +1,7 @@
 package controllers;
 
 import models.commands.CommandInvoker;
+import models.commands.concrete.CheckVersionCommand;
 import models.commands.concrete.NextImageCommand;
 import models.objects.CountdownTimer;
 import models.objects.Parameters;
@@ -10,9 +11,14 @@ import views.components.ProgressBarDialog;
 import views.imageframe.ImageFrame;
 import views.mainframe.MainFrame;
 
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
+
+import static models.constants.project.GitHubURLConstants.GITHUB_DRAWTIME_LATEST_RELEASE_URL;
 
 public class Controller {
 
@@ -85,6 +91,9 @@ public class Controller {
      */
     public void run() {
         mainFrame = new MainFrame();
+
+        CommandInvoker commandInvoker = CommandInvoker.getInstance();
+        commandInvoker.executeCommand(new CheckVersionCommand());
     }
 
     /**
@@ -115,6 +124,39 @@ public class Controller {
                 }
             }).start();
         }
+    }
+
+    /**
+     * Open a dialog that prevents user there is a newer version available
+     */
+    public void openNewVersionDialog() {
+        mainFrame.showCustomOptionDialog(
+                "A new version is available on GitHub.",
+                "New version available",
+                new String[]{"Open in browser", "Close"},
+                new Runnable[]{
+                        () -> openWebPage(GITHUB_DRAWTIME_LATEST_RELEASE_URL),
+                        () -> {}
+                });
+    }
+
+    /**
+     * Open web page with desktop browser
+     *
+     * @param url URL to open
+     * @return True if page has been opened, false otherwise
+     */
+    public boolean openWebPage(String url) {
+        try {
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                desktop.browse(URI.create(url));
+                return true;
+            }
+        } catch (IOException _) {
+            // Nothing to do
+        }
+        return false;
     }
 
     // EVENT HANDLER METHODS

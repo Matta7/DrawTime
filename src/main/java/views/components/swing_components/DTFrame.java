@@ -24,6 +24,13 @@ public abstract class DTFrame extends JFrame {
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
+    public void showCustomOptionDialog(String message, String title, String[] options, Runnable[] actions) {
+        int choice = JOptionPane.showOptionDialog(this, message, title, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+        if (choice < actions.length && choice > -1) {
+            actions[choice].run();
+        }
+    }
+
     /**
      * Initialize the frame
      */

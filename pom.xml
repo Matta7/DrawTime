@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>DrawTime</artifactId>
-    <version>1.12</version>
+    <version>1.13</version>
     <name>DrawTime</name>
     <description>DrawTime</description>
     <packaging>jar</packaging>
@@ -68,6 +68,13 @@
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>3.6.2</version>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.2</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
